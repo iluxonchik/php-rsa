@@ -88,6 +88,25 @@ function binary_gcd($a, $b){
 	*/
 }
 
+function encryptBlock($publicKey, $msg){
+	/*  encrypts a single block
+	 *	returns an encrypted version of $msg
+	 *  $other is the value of e
+	 *  $msg must be an integer
+	 */
+	return pow($msg, $publicKey->other) % $publicKey->N;
+}
+
+function decryptBlock($privateKey, $msg){
+	/*  decrypts a single block
+	 *	returns a decrypted version of $msg
+	 *  $other is the valye of d
+	 *  $msg must be an integer
+	 */
+	return pow($msg, $privateKey->other) % $privateKey->N;
+}
+
+
 ?>
 
 
