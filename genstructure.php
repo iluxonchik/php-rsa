@@ -1,5 +1,5 @@
 <?php
-class Key{
+class key{
 	/* used when values of N and e or N and d are provided 
 	 * $other is either the value of d(private key) or e(public key)
 	 */
