@@ -1,13 +1,14 @@
 <?php
 require_once('genstructure.php');
 require_once('rsafunctions.php');
-
 if (isset($_POST['submit_encrypt'])){
 	// text for encryption has been submitted
 	//TODO: Form checking
-	$N = $_POST['N'];
-	$e = $_POST['e'];
-	$msgToEncrytp = $_POST['textToEncrypt'];
+	if (validEncryptionData()){
+		// if the user provided fields for encryption are valid
+		$publicKey = newKey($_POST['N'], $_POST['e']);
+		$asciified = textToASCII($_POST['textToEncrypt']);
+}
 }
 else if (isset($_POST['submit_decrypt'])){
 	// text for decryption has been submitted

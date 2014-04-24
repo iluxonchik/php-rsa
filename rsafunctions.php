@@ -30,7 +30,7 @@ function isPrime($num){
 	return true;
 }
 
-function binary_gcd($a, $b){
+function binaryGCD($a, $b){
 	/* computes and returns the greatest common divisor between a and b */
 	
 	/*
@@ -106,6 +106,40 @@ function decryptBlock($privateKey, $msg){
 	return pow($msg, $privateKey->other) % $privateKey->N;
 }
 
+function numOfDigits($num){
+	/* returns the number of digitis conatined in a non-null integer */
+	$numDigits = 0; // counts the number of digits 
+
+	while ($num > 0){
+		$numDigits++;
+		$num = (int)($num / 10);
+	}
+
+	return $numDigits;
+}
+function encryptText($publicKey, $text, $blockSize){
+	/* encrtypts text in the provided block sizes */
+	// NOTE: THIS FUNCTION HAS NOT BEEN TESTED YET AND MY NEED COMPLETION
+	$encrypted = '';
+	$auxRemainder = $strlen($text) % $blockSize;
+
+	if ($auxRemainder != 0)
+		// if number of digits in text is not a multiple of 4, concatenate some zeroes at the end
+		for ($i = 0; $i < $auxRemainder; $i++)
+			$text = $text . '0';
+
+	$counter = 0;
+	$block = ''; // block of text to encrypt
+	for($counter = 0; $counter < strlen($text); $counter += $blockSize){
+		for ($i = $counter; $i < $blockSize; $i++)
+			$block = $block . $text[$i];
+
+			$encrypted = $encrypted . ((string)(encryptBlock($publicKey, $block)));
+	}
+
+	return $encrypted;
+}
+
 
 ?>
 
@@ -115,7 +149,7 @@ function decryptBlock($privateKey, $msg){
  The code below is not directly used in the script.
 **************************************************/
 
-function gcd_recursive($a, $b){
+function binaryGCDRecursive($a, $b){
 	/* computes and returns the greatest common divisor between a and b */
 	
 	/*
