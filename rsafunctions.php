@@ -88,25 +88,7 @@ function binaryGCD($a, $b){
 	*/
 }
 
-function encryptBlock($publicKey, $msg){
-	/*  encrypts a single block
-	 *	returns an encrypted version of $msg
-	 *  $other is the value of e
-	 *  $msg must be an integer
-	 */
-	return pow($msg, $publicKey->other) % $publicKey->N;
-}
-
-function decryptBlock($privateKey, $msg){
-	/*  decrypts a single block
-	 *	returns a decrypted version of $msg
-	 *  $other is the valye of d
-	 *  $msg must be an integer
-	 */
-	return pow($msg, $privateKey->other) % $privateKey->N;
-}
-
-function numOfDigits($num){
+function numDigits($num){
 	/* returns the number of digitis conatined in a non-null integer */
 	$numDigits = 0; // counts the number of digits 
 
@@ -117,24 +99,58 @@ function numOfDigits($num){
 
 	return $numDigits;
 }
-function encryptText($publicKey, $text, $blockSize){
+
+function encryptBlock($publicKey, $msg, $blockSize){
+	/*  encrypts a single block
+	 *	returns an encrypted version of $msg
+	 *  $other is the value of e
+	 *  $msg must be a string
+	 */
+	$encr = bcmod(bcpow($msg, $publicKey->other),$publicKey->N);
+	$encrNumDig = numDigits(((int)$encr)); // number of digits in the encrypted message
+	
+	if($encrNumDig < $blockSize){
+		// if the number of digits in the encrypted message is less that the block size
+		$zeroes = '';
+		// add some zeroes at the beginning
+		for($i = 0; $i < $blockSize - $encrNumDig; $i++)
+			$zeroes = $zeroes . '0';
+		$encr = $zeroes . $encr;
+	}
+
+	return $encr;
+}
+
+function decryptBlock($privateKey, $msg){
+	/*  decrypts a single block
+	 *	returns a decrypted version of $msg
+	 *  $other is the valye of d
+	 *  $msg must be an integer
+	 */
+	return bcmod(bcpow($msg, $privateKey->other), $privateKey->N);
+}
+
+function encryptText($publicKey, $text, $blockSize, $opt){
 	/* encrtypts text in the provided block sizes */
-	// NOTE: THIS FUNCTION HAS NOT BEEN TESTED YET AND MY NEED COMPLETION
-	$encrypted = '';
-	$auxRemainder = $strlen($text) % $blockSize;
+	/* $opt = 0 --> encrypt  $opt = 1 --> decrtypt*/
+
+	$encrypted = ''; // stores the encrypted/decrypted integer string (the encrypted text)
+	$auxRemainder = strlen($text) % $blockSize; // used to check if the text has the appropriate ammount of characters to block size
 
 	if ($auxRemainder != 0)
-		// if number of digits in text is not a multiple of 4, concatenate some zeroes at the end
+		// if number of digits in text is not a multiple of $blockSize, concatenate some spaces at the end
 		for ($i = 0; $i < $auxRemainder; $i++)
-			$text = $text . '0';
+			$text = $text . '32';
+	
+	for($counter = 0; $counter < strlen($text) - $blockSize; $counter += $blockSize){
+		$block = ''; // block of text to encrypt/decrypt
 
-	$counter = 0;
-	$block = ''; // block of text to encrypt
-	for($counter = 0; $counter < strlen($text); $counter += $blockSize){
-		for ($i = $counter; $i < $blockSize; $i++)
+		for ($i = $counter; $i < $blockSize + $counter; $i++)
+			// built the block of text to encrypt
 			$block = $block . $text[$i];
 
-			$encrypted = $encrypted . ((string)(encryptBlock($publicKey, $block)));
+		// encrypt an single block of text and add it to the encrypted string
+		$encrypted = $encrypted . ($opt?decryptBlock($publicKey, $block, $blockSize):encryptBlock($publicKey, $block, $blockSize));			
 	}
 
 	return $encrypted;

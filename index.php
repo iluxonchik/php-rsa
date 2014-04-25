@@ -6,16 +6,27 @@ if (isset($_POST['submit_encrypt'])){
 	//TODO: Form checking
 	if (validEncryptionData()){
 		// if the user provided fields for encryption are valid
-		$publicKey = newKey($_POST['N'], $_POST['e']);
+		$publicKey = new Key($_POST['N'], $_POST['e']);
 		$asciified = textToASCII($_POST['textToEncrypt']);
+		$blockSize = ((int)$_POST['blockSize']);
+		$output = encryptText($publicKey, $asciified, $blockSize, 0); // encrypt the text
+	}
+	else 
+		inputError();
 }
-}
+
+
 else if (isset($_POST['submit_decrypt'])){
 	// text for decryption has been submitted
 	//TODO: Form checking
-	$N = $_POST['N'];
-	$d = $_POST['d'];
-	$msgToDecrytp = $_POST['textToDecrypt'];
+	if (validDecryptionData()){
+		$publicKey = new Key($_POST['N'], $_POST['d']);
+		$textToDecrypt = $_POST['textToDecrypt'];
+		$blockSize = ((int)$_POST['blockSize']);
+		$output = encryptText($publicKey, $textToDecrypt, $blockSize, 1); // decrypt the text
+	}
+	else
+		inputError();
 }
 
 ?>
@@ -32,6 +43,7 @@ else if (isset($_POST['submit_decrypt'])){
 	<fieldset>
 		<label for="N">N:</label> <input type="text" name="N"> <br/ >
 		<label for="e">e:</label> <input type="text" name="e"> <br/ >
+		<label for="blockSize">Block Size:</label> <input type="text" name="blockSize"> (how to separate the digits before encryption) <br/ >
 		<label for="textToEncrypt">Text To Encrypt:</label> <textarea rows="10" cols="45" name="textToEncrypt"></textarea> 
 	</fieldset>
 	<input type="submit" name="submit_encrypt">
@@ -40,7 +52,8 @@ else if (isset($_POST['submit_decrypt'])){
 <form method="POST" action = "<?php $_SERVER['PHP_SELF'] ?>">
 	<fieldset>
 		<label for="N">N:</label> <input type="text" name="N"> <br/ >
-		<label for="e">d:</label> <input type="text" name="e"> <br/ >
+		<label for="e">d:</label> <input type="text" name="d"> <br/ >
+		<label for="blockSize">Block Size:</label> <input type="text" name="blockSize"> (how to separate the digits before decryption) <br/ >
 		<label for="textToDecrypt">Text To Decrypt:</label> <textarea rows="10" cols="45" name="textToDecrypt"></textarea> 
 	</fieldset>
 	<input type="submit" name="submit_decrypt">

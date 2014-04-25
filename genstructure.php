@@ -2,10 +2,11 @@
 class key{
 	/* used when values of N and e or N and d are provided 
 	 * $other is either the value of d(private key) or e(public key)
+	 * NOTE: Both, $N and $other must be strings (bc functions will be used on them)
 	 */
 	function __construct($N, $other){
-		$this->N = $N;
-		$this->other = $other;
+		$this->N = ((string)$N);
+		$this->other = ((string)$other);
 	}
 }
 
@@ -35,8 +36,20 @@ function textToASCII($text){
 function validEncryptionData(){
 	/* checks if the fields provided by the user for encryption are not empty */
 	// This is used to prevent from having an extensive set of if conditions in index.php
-	return isset($_POST['textToEncrypt']) && !empty($_POST['textToEncrypt']) && isset($_POST['N']) && !empty($_POST['N']) && isset($_POST['e']) && !empty($_POST['e']);
+	return isset($_POST['textToEncrypt']) && !empty($_POST['textToEncrypt']) && isset($_POST['N']) && !empty($_POST['N']) && isset($_POST['e']) && !empty($_POST['e']) && isset($_POST['blockSize']) && !empty($_POST['blockSize']);
 }
+
+function validDecryptionData(){
+	/* checks if the fields provided by the user for encryption are not empty */
+	// This is used to prevent from having an extensive set of if conditions in index.php
+	return isset($_POST['textToDecrypt']) && !empty($_POST['textToDecrypt']) && isset($_POST['N']) && !empty($_POST['N']) && isset($_POST['d']) && !empty($_POST['d']) && isset($_POST['blockSize']) && !empty($_POST['blockSize']);
+}
+
+function inputError(){
+	/* simply echo a generic error message */
+	echo 'ERROR: Invalid Data Entered. Please fill in all of the requires fields.<br />';
+}
+
 ?>
 
 <?php
