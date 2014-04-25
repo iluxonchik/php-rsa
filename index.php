@@ -28,6 +28,37 @@ else if (isset($_POST['submit_decrypt'])){
 	else
 		inputError();
 }
+else if (isset($_POST['submit_helper'])){
+	// ther helper form has been submitted
+	if(validGCDHelper()){
+		$a = $_POST['a'];
+		$b = $_POST['b'];
+		$gcdOut = binaryGCD($a, $b);
+	}
+	if(valideValHelper()){
+		
+		$pMin1 = (((int)$_POST['p']) - 1); // p-1 value
+		$qMin1 = (((int)$_POST['q']) - 1); // q-1 value
+		$prod = bcmul((string)$pMin1, (string)$qMin1); // (p-1) * (q-1)
+
+		if(binaryGCD($_POST['eVal'], $prod) == 1)
+			$eValidation = 'VALID e ';
+		else
+			$eValidation = 'INVALID e ';
+	}
+	if (validdValHelper()){
+		$pMin1 = (((int)$_POST['pd']) - 1); // p-1 value
+		$qMin1 = (((int)$_POST['qd']) - 1); // q-1 value
+		$mod = bcmul((string)$pMin1, (string)$qMin1); // (p-1) * (q-1)
+		$prod = bcmul($_POST['dVal'], $_POST['ed']);
+		$divRemainder = bcmod($prod, $mod); // division remainder
+
+		if($divRemainder == '1')
+			$dValidation = 'VALID d ';
+		else
+			$dValidation = 'INVALID d ';
+	}
+}
 
 ?>
 
@@ -37,6 +68,7 @@ else if (isset($_POST['submit_decrypt'])){
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 	<title>RSA Encryptor/Decryptor</title>
 </head>
+<body>
  <p> (N, e) --> public key | (N, d) --> private key [N is the modulus]
 
 <form method="POST" action = "<?php $_SERVER['PHP_SELF'] ?>">
@@ -63,7 +95,30 @@ else if (isset($_POST['submit_decrypt'])){
 <p> Output: </p>
 <textarea rows="10" cols="45" name="output"><?php if(isset($output) && !empty($output)) echo $output; ?></textarea>
 
-<body>
+<form method="POST" action = "<?php $_SERVER['PHP_SELF'] ?>">
+	Helper
+	<fieldset>
+		Compute gcd(a,b)
+		<label for="a">a:</label> <input type="text" name="a">
+		<label for="b"> b:</label> <input type="text" name="b"> 
+		<?php if(isset($gcdOut)) echo ' gcd(' . $a . ', ' . $b . ') = ' . $gcdOut?><br/ >
+		<br />
+		Valid e checker (N = p*q) | e must be such that: e=1(mod[(p-1)*(q-1)]):
+		<label for="p">p:</label> <input type="text" name="p">
+		<label for="q"> q:</label> <input type="text" name="q">
+		<label for="eVal"> e:</label> <input type="text" name="eVal">
+		<?php if(isset($eValidation)) echo ' ' . $eValidation . '<br />' ?>
+		<br />
+		Valud d checker (N = p*q) | e must be such that: d*e=1(mod[(p-1)*(q-1)]):
+		<label for="pd">p:</label> <input type="text" name="pd">
+		<label for="qd"> q:</label> <input type="text" name="qd">
+		<label for="ed"> e:</label> <input type="text" name="ed">
+		<label for="dVal"> d:</label> <input type="text" name="dVal">
+		<?php if(isset($dValidation)) echo ' ' . $dValidation . '<br />' ?>
+
+	</fieldset>
+	<input type="submit" name="submit_helper">
+</form>
   
 </body>
 </html>

@@ -10,19 +10,6 @@ class key{
 	}
 }
 
-class newEncryption{
-	/* contains values used in a new encryption
-	 * This class is used when a two prime numbers q and p are provided,
-	 * and values such as the modulus have to be computed.
-	 */
-	function __construct($p, $q){
-		$this->p = $p;
-		$this->q = $q;
-		$this->N = $p*$q; // N is the modulus
-		$this->M = ($p-1) * ($q-1); // used check/genarate d and e
-	}
-}
-
 function textToASCII($text){
 	/* recieves a chunk of text and returns a string resulting from converting all of the caharacters to ASCII */
 	/* the reason for this function to return a string and not an integer is so that later on the text can be easily separated in
@@ -43,6 +30,23 @@ function validDecryptionData(){
 	/* checks if the fields provided by the user for encryption are not empty */
 	// This is used to prevent from having an extensive set of if conditions in index.php
 	return isset($_POST['textToDecrypt']) && !empty($_POST['textToDecrypt']) && isset($_POST['N']) && !empty($_POST['N']) && isset($_POST['d']) && !empty($_POST['d']) && isset($_POST['blockSize']) && !empty($_POST['blockSize']);
+}
+
+function validGCDHelper(){
+	/* checks if the fields provided by the user for gcd calculation are not empty */
+	// This is used to prevent from having an extensive set of if conditions in index.php
+	return (isset($_POST['a']) && isset($_POST['b']) && !empty($_POST['a']) && !empty($_POST['b']));
+}
+
+function valideValHelper(){
+	/* checks if the fields provided by the user to check if e is valid are not empty */
+	// This is used to prevent from having an extensive set of if conditions in index.php
+	return (isset($_POST['p']) && isset($_POST['q']) && !empty($_POST['p']) && !empty($_POST['q']) && !empty($_POST['eVal']) && !empty($_POST['eVal']) );
+}
+function validdValHelper(){
+	/* checks if the fields provided by the user to check if d is valid are not empty */
+	// This is used to prevent from having an extensive set of if conditions in index.php
+	return (isset($_POST['pd']) && isset($_POST['qd']) && !empty($_POST['pd']) && !empty($_POST['qd']) && !empty($_POST['ed']) && !empty($_POST['ed']) && !empty($_POST['dVal']) && !empty($_POST['dVal']) );
 }
 
 function inputError(){

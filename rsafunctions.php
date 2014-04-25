@@ -1,35 +1,4 @@
 <?php
-function isPrime($num){
-	/* checks if the provided number is a prime number */
-	// Source: http://icdif.com/computing/2011/09/15/check-number-prime-number/
-
-	// by defenition, 1 is not prime
-	if($num == 1)
-		return false;
-
-	// 2 is the only even number that is prime
-	if($num == 2)
-		return true;
-
-	/* 
-	 * if a number is divisible by 2, it's not prime, so there is no need 
-	 * to check other even numbers
-	 */
-	if ($num % 2 == 0)
-		return false;
-
-	/*
-	 * this will check if the number is divisible by an odd number,
-	 * (that's why i is incremented by 2 each cycle, so that the sequence
-	 * 3,5,7,9,11... is achieved)
-	 */
-	for ($i = 3; $i < ceil(sqrt($num)); $i += 2)
-		if ($num % $i == 0)
-			return false;
-	
-	return true;
-}
-
 function binaryGCD($a, $b){
 	/* computes and returns the greatest common divisor between a and b */
 	
@@ -221,5 +190,35 @@ function binaryGCDRecursive($a, $b){
 	*/
 }
 
+function isPrime($num){
+	/* checks if the provided number is a prime number */
+	// Source: http://icdif.com/computing/2011/09/15/check-number-prime-number/
+
+	// by defenition, 1 is not prime
+	if($num == 1)
+		return false;
+
+	// 2 is the only even number that is prime
+	if($num == 2)
+		return true;
+
+	/* 
+	 * if a number is divisible by 2, it's not prime, so there is no need 
+	 * to check other even numbers
+	 */
+	if ($num % 2 == 0)
+		return false;
+
+	/*
+	 * this will check if the number is divisible by an odd number,
+	 * (that's why i is incremented by 2 each cycle, so that the sequence
+	 * 3,5,7,9,11... is achieved)
+	 */
+	for ($i = 3; $i < ceil(sqrt($num)); $i += 2)
+		if ($num % $i == 0)
+			return false;
+	
+	return true;
+}
 
 ?>
